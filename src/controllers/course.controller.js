@@ -1,13 +1,18 @@
 const Course = require('../models/course.js')
 
 const getAllCourses = async (req, res) => {
+  console.log(req.query)
+  const { page = 1, limit = 10 } = req.query
+  const offset = (page - 1) * limit
+
   try {
-    const courses = await Course.findAll()
+    const courses = await Course.findAll({
+      limit: parseInt(limit, 10),
+      offset: parseInt(offset, 10)
+    });
 
     res.status(200).json(courses)
-
   } catch (error) {
-
     res.status(500).json({ message: "Terjadi kesalahan di server", error: error.message })
   }
 }
@@ -69,5 +74,4 @@ module.exports = {
   createCourse,
   updateCourseById,
   deleteCourseById
-
 }
